@@ -10,7 +10,9 @@ import java.util.HashMap;
 @Autonomous(name = "AUTO", group = "Autonomous")
 public class AutoExample extends OpMode {
     boolean isRed = false;
-    boolean isAudience = false;
+    boolean recentRed = false;
+    boolean isNet = false;
+    boolean recentNet = false;
     DriveTo driveTo;
     Robot robot;
     public float coords[] = new float[5];
@@ -21,10 +23,10 @@ public class AutoExample extends OpMode {
     double wait = 0;
 
     //for where coords are on the field for our different auto modes (diff start positions, ect.)
-    HashMap<String, double[]> drivePositionsAudienceRed = new HashMap<>();
-    HashMap<String, double[]> drivePositionsAudienceBlue = new HashMap<>();
-    HashMap<String, double[]> drivePositionsBackstopRed = new HashMap<>();
-    HashMap<String, double[]> drivePositionsBackstopBlue = new HashMap<>();
+    HashMap<String, double[]> drivePositionsNetRed = new HashMap<>();
+    HashMap<String, double[]> drivePositionsNetBlue = new HashMap<>();
+    HashMap<String, double[]> drivePositionsObsRed = new HashMap<>();
+    HashMap<String, double[]> drivePositionsObsBlue = new HashMap<>();
     HashMap<String, double[]> drivePositions;
 
     @Override
@@ -35,61 +37,90 @@ public class AutoExample extends OpMode {
         driveTo = new DriveTo(robot, telemetry);
 
         //x, y, heading for start positions
-        drivePositionsAudienceRed.put("start", new double[]{-36, -63, 90});
-        drivePositionsAudienceBlue.put("start", new double[]{-36, 63, -90});
-        drivePositionsBackstopRed.put("start", new double[]{12, -63, 90});
-        drivePositionsBackstopBlue.put("start", new double[]{12, 63, -90});
+        drivePositionsNetRed.put("start", new double[]{-36, -63, 90});
+        drivePositionsNetBlue.put("start", new double[]{36, 63, -90});
+        drivePositionsObsRed.put("start", new double[]{24, -63, 90});
+        drivePositionsObsBlue.put("start", new double[]{-24, 63, -90});
 
-        drivePositionsAudienceRed.put("Prop Approach", new double[]{-36, -40, 90});
-        drivePositionsAudienceBlue.put("Prop Approach", new double[]{-36, 40, -90});
-        drivePositionsBackstopRed.put("Prop Approach", new double[]{12, -40, 90});
-        drivePositionsBackstopBlue.put("Prop Approach", new double[]{12, 40, -90});
-        double ROBOT_TO_PIXEL_CENTER = 8.5;
-        drivePositionsAudienceRed.put("propLEFT", new double[]{-47.5 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 135});
-        drivePositionsAudienceRed.put("propMIDDLE", new double[]{-36, -24.5 - ROBOT_TO_PIXEL_CENTER, 90});
-        drivePositionsAudienceRed.put("propRIGHT", new double[]{-24.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 45});
+        final double ROBOT_TO_BUCKET = 12;
 
-        drivePositionsBackstopRed.put("propLEFT", new double[]{0.5 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 135});
-        drivePositionsBackstopRed.put("propMIDDLE", new double[]{12, -24.5 - ROBOT_TO_PIXEL_CENTER, 90});
-        drivePositionsBackstopRed.put("propRIGHT", new double[]{23.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 45});
+        drivePositionsNetRed.put("Sample Score Pose", new double[]{-68 + ROBOT_TO_BUCKET / Math.sqrt(2), -68 + ROBOT_TO_BUCKET / Math.sqrt(2), 45});
+        drivePositionsNetBlue.put("Sample Score Pose", new double[]{68 - ROBOT_TO_BUCKET / Math.sqrt(2), 68 - ROBOT_TO_BUCKET / Math.sqrt(2), -135});
 
-        drivePositionsAudienceBlue.put("propLEFT", new double[]{-24.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -45});
-        drivePositionsAudienceBlue.put("propMIDDLE", new double[]{-36, 24.5 + ROBOT_TO_PIXEL_CENTER, -90});
-        drivePositionsAudienceBlue.put("propRIGHT", new double[]{-49 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -135});
+        drivePositionsNetRed.put("Ascent Park Waypoint", new double[]{-39, -30, 90});
+        drivePositionsNetBlue.put("Ascent Park Waypoint", new double[]{39, 30, -90});
 
-        drivePositionsBackstopBlue.put("propLEFT", new double[]{23.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -45});
-        drivePositionsBackstopBlue.put("propMIDDLE", new double[]{12, 24.5 + ROBOT_TO_PIXEL_CENTER, -90});
-        drivePositionsBackstopBlue.put("propRIGHT", new double[]{-1 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -135});
+        drivePositionsNetRed.put("Ascent Park", new double[]{-24, -12, 90});
+        drivePositionsNetBlue.put("Ascent Park", new double[]{24, 12, -90});
 
-        drivePositionsAudienceRed.put("propApproachLEFT", new double[]{-38, -40, 135});
-        drivePositionsAudienceRed.put("propApproachMIDDLE", new double[]{-36, -40, 90});
-        drivePositionsAudienceRed.put("propApproachRIGHT", new double[]{-36, -40, 45});
-        drivePositionsBackstopRed.put("propApproachLEFT", new double[]{12, -40, 135});
-        drivePositionsBackstopRed.put("propApproachMIDDLE", new double[]{12, -40, 90});
-        drivePositionsBackstopRed.put("propApproachRIGHT", new double[]{14, -40, 45});
-        drivePositionsAudienceBlue.put("propApproachLEFT", new double[]{-36, 40, -45});
-        drivePositionsAudienceBlue.put("propApproachMIDDLE", new double[]{-36, 40, -90});
-        drivePositionsAudienceBlue.put("propApproachRIGHT", new double[]{-38, 40, -135});
-        drivePositionsBackstopBlue.put("propApproachLEFT", new double[]{14, 40, -45});
-        drivePositionsBackstopBlue.put("propApproachMIDDLE", new double[]{12, 40, -90});
-        drivePositionsBackstopBlue.put("propApproachRIGHT", new double[]{12, 40, -135});
+        drivePositionsObsRed.put("Obs Park", new double[]{48, -63, 90});
+        drivePositionsObsBlue.put("Obs Park", new double[]{-48, 63, -90});
+
+        /*double ROBOT_TO_PIXEL_CENTER = 8.5;
+        drivePositionsNetRed.put("propLEFT", new double[]{-47.5 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 135});
+        drivePositionsNetRed.put("propMIDDLE", new double[]{-36, -24.5 - ROBOT_TO_PIXEL_CENTER, 90});
+        drivePositionsNetRed.put("propRIGHT", new double[]{-24.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 45});
+
+        drivePositionsObsRed.put("propLEFT", new double[]{0.5 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 135});
+        drivePositionsObsRed.put("propMIDDLE", new double[]{12, -24.5 - ROBOT_TO_PIXEL_CENTER, 90});
+        drivePositionsObsRed.put("propRIGHT", new double[]{23.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 45});
+
+        drivePositionsNetBlue.put("propLEFT", new double[]{-24.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -45});
+        drivePositionsNetBlue.put("propMIDDLE", new double[]{-36, 24.5 + ROBOT_TO_PIXEL_CENTER, -90});
+        drivePositionsNetBlue.put("propRIGHT", new double[]{-49 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -135});
+
+        drivePositionsObsBlue.put("propLEFT", new double[]{23.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -45});
+        drivePositionsObsBlue.put("propMIDDLE", new double[]{12, 24.5 + ROBOT_TO_PIXEL_CENTER, -90});
+        drivePositionsObsBlue.put("propRIGHT", new double[]{-1 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -135});
+
+        drivePositionsNetRed.put("propApproachLEFT", new double[]{-38, -40, 135});
+        drivePositionsNetRed.put("propApproachMIDDLE", new double[]{-36, -40, 90});
+        drivePositionsNetRed.put("propApproachRIGHT", new double[]{-36, -40, 45});
+        drivePositionsObsRed.put("propApproachLEFT", new double[]{12, -40, 135});
+        drivePositionsObsRed.put("propApproachMIDDLE", new double[]{12, -40, 90});
+        drivePositionsObsRed.put("propApproachRIGHT", new double[]{14, -40, 45});
+        drivePositionsNetBlue.put("propApproachLEFT", new double[]{-36, 40, -45});
+        drivePositionsNetBlue.put("propApproachMIDDLE", new double[]{-36, 40, -90});
+        drivePositionsNetBlue.put("propApproachRIGHT", new double[]{-38, 40, -135});
+        drivePositionsObsBlue.put("propApproachLEFT", new double[]{14, 40, -45});
+        drivePositionsObsBlue.put("propApproachMIDDLE", new double[]{12, 40, -90});
+        drivePositionsObsBlue.put("propApproachRIGHT", new double[]{12, 40, -135});*/
     }
 
     @Override
     public void init_loop() {
+        if (gamepad1.dpad_up) {
+            if (!recentNet) {
+                isNet = !isNet;
+                recentNet = true;
+            }
+        } else {
+            recentNet = false;
+        }
+        if (gamepad1.dpad_left) {
+            if (!recentRed) {
+                isRed = !isRed;
+                recentRed = true;
+            }
+        } else {
+            recentRed = false;
+        }
+        telemetry.addData("Team : ", "%s", isRed ? "RED" : "BLUE");
+        telemetry.addData("Position : ", "%s", isNet ? "NET" : "OBSERVATION");
+        telemetry.update();
     }
 
     @Override
     public void start() {
         //Pick our hashmap for color and side
-        if (isAudience && isRed) {
-            drivePositions = drivePositionsAudienceRed;
-        } else if (isAudience && !isRed) {
-            drivePositions = drivePositionsAudienceBlue;
-        } else if (!isAudience && isRed) {
-            drivePositions = drivePositionsBackstopRed;
+        if (isNet && isRed) {
+            drivePositions = drivePositionsNetRed;
+        } else if (isNet && !isRed) {
+            drivePositions = drivePositionsNetBlue;
+        } else if (!isNet && isRed) {
+            drivePositions = drivePositionsObsRed;
         } else {
-            drivePositions = drivePositionsBackstopBlue;
+            drivePositions = drivePositionsObsBlue;
         }
 
         //setting start position, 0 is x, 1 is y, 2 is heading
@@ -160,17 +191,22 @@ public class AutoExample extends OpMode {
     }
 
     public void actionStart() {
-        driveTo.setTargetPosition(drivePositions.get("Prop Approach"), 1, false);
-        nextState = "actionPlaceProp";
+        driveTo.setTargetPosition(drivePositions.get(isNet ? "Sample Score Pose" : "Obs Park"), 1, true);
+        nextState = isNet ? "actionSampleScore" : "actionStop";
     }
 
-    public void actionPlaceProp() {
-        driveTo.setTargetPosition(drivePositions.get("prop"), .4);
-        nextState = "actionPropAvoidPole";
+    public void actionSampleScore() {
+        wait = getRuntime() + 1;
+        nextState = "actionAscentParkWay";
     }
 
-    public void actionPropAvoidPole() {
-        driveTo.setTargetPosition(drivePositions.get("propApproach"), 1, false);
+    public void actionAscentParkWay() {
+        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint"), 1, false);
+        nextState = "actionAscentPark";
+    }
+
+    public void actionAscentPark() {
+        driveTo.setTargetPosition(drivePositions.get("Ascent Park"), 1, false);
         nextState = "actionStop";
     }
 
