@@ -45,15 +45,15 @@ public class Robot {
     /**
      * Total left odometry pod encoder count when traveling a decided forward distance (IF its negative, keep the negative sign)
      */
-    static double LEFT_ENCODER_FORWARD_VALUE = -31297 + -31422 + -31945 + -31571;
+    static double LEFT_ENCODER_FORWARD_VALUE = -47837 + -47978 + -47925 + -47989;
     /**
      * Total right odometry pod encoder count when traveling a decided forward distance (IF its negative, keep the negative sign)
      */
-    static double RIGHT_ENCODER_FORWARD_VALUE = -32007 + -32042 + -31976 + -31996;
+    static double RIGHT_ENCODER_FORWARD_VALUE = 48145 + 48163 + 48117 + 48070;
     /**
      * Total middle odometry pod encoder count when traveling a decided forward distance (IF its negative, keep the negative sign)
      */
-    static double MIDDLE_ENCODER_FORWARD_VALUE = -398 + -840 + -669 + -686;
+    static double MIDDLE_ENCODER_FORWARD_VALUE = -602 + -304 + -275 + -282;
     /**
      * Decided distance from encoder forward value tests (we drove forward 96in) times number of tests (in inches)
      */
@@ -63,15 +63,15 @@ public class Robot {
     /**
      * Total left odometry pod encoder count when traveling a decided strafe distance (IF its negative, keep the negative sign)
      */
-    static double LEFT_ENCODER_STRAFE_VALUE = 727 + 94 + -187 + 1597;
+    static double LEFT_ENCODER_STRAFE_VALUE = 326 + 148 + 193 + 438;
     /**
      * Total right odometry pod encoder count when traveling a decided strafe distance (IF its negative, keep the negative sign)
      */
-    static double RIGHT_ENCODER_STRAFE_VALUE = -455 + -1147 + -1384 + -204;
+    static double RIGHT_ENCODER_STRAFE_VALUE = 102 + -173 + -67 + 62;
     /**
      * Total middle odometry pod encoder count when traveling a decided strafe distance (IF its negative, keep the negative sign)
      */
-    static double MIDDLE_ENCODER_STRAFE_VALUE = -31983 + -32027 + -32093 + -31979;
+    static double MIDDLE_ENCODER_STRAFE_VALUE = -48175 + -48011 + -48200 + -48155;
     /**
      * Decided distance from encoder strafe value tests (we strafed right 96in) times number of tests (in inches)
      */
@@ -79,15 +79,15 @@ public class Robot {
     /**
      * Total left odometry pod encoder count when spinning a decided amount (IF its negative, keep the negative sign)
      */
-    static double LEFT_ENCODER_CW_TURN = 132984 + 133344 + 138101 + 137789;
+    static double LEFT_ENCODER_CW_TURN = -69604 + -67945 + -67228 + -66051;
     /**
      * Total right odometry pod encoder count when spinning a decided amount (IF its negative, keep the negative sign)
      */
-    static double RIGHT_ENCODER_CW_TURN = -126787 + -126350 + -120872 + -121079;
+    static double RIGHT_ENCODER_CW_TURN = -130500 + -132140 + -132853 + -133990;
     /**
      * Total middle odometry pod encoder count when spinning a decided amount (IF its negative, keep the negative sign)
      */
-    static double MIDDLE_ENCODER_CW_TURN = 74385 + 73464 + 86852 + 86790;
+    static double MIDDLE_ENCODER_CW_TURN = 194724 + 194350 + 195156 + 195039;
     /**
      * Decided amount from encoder spinning value tests [we spun clockwise (CW) ten times (3600 degrees)] times number of tests (in inches)
      */
@@ -119,7 +119,7 @@ public class Robot {
     public DcMotorEx setUpEncoderMotor(
             String identifier, DcMotor.Direction direction,
             double pidf_p, double pidf_i, double pidf_d, double pidf_f) {
-        return setUpEncoderMotor(identifier, direction, pidf_p, pidf_i, pidf_d, pidf_f, true);
+        return setUpEncoderMotor(identifier, direction, pidf_p, pidf_i, pidf_d, pidf_f, false);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -203,10 +203,10 @@ public class Robot {
      */
     public void drive(double forward, double strafeRight, double turnCW, Telemetry telemetry) {
 
-        double speedfr = -forward + strafeRight + turnCW;
+        double speedfr = forward + strafeRight - turnCW;
         double speedfl = forward + strafeRight + turnCW;
-        double speedrl = -forward + strafeRight - turnCW;
-        double speedrr = forward + strafeRight - turnCW;
+        double speedrl = forward - strafeRight + turnCW;
+        double speedrr = forward - strafeRight - turnCW;
 
         double max = Math.max(Math.max(Math.abs(speedfl), Math.abs(speedfr)), Math.max(Math.abs(speedrl), Math.abs(speedrr)));
 
@@ -255,8 +255,8 @@ public class Robot {
         int rrPositionChange = rrPosition - rrLastPosition;
 
         int rightPod = rlPositionChange;
-        int leftPod = frPositionChange;
-        int midPod = rrPositionChange;
+        int leftPod = rrPositionChange;
+        int midPod = frPositionChange;
 
         //how far has robot moved, how many inches and degrees changed (forward, strafe, turn)
         //turn angle in degrees

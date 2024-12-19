@@ -42,16 +42,19 @@ public class AutoExample extends OpMode {
         drivePositionsObsRed.put("start", new double[]{24, -63, 90});
         drivePositionsObsBlue.put("start", new double[]{-24, 63, -90});
 
-        final double ROBOT_TO_BUCKET = 12;
+        final double ROBOT_TO_BUCKET = 8.5;
 
-        drivePositionsNetRed.put("Sample Score Pose", new double[]{-68 + ROBOT_TO_BUCKET / Math.sqrt(2), -68 + ROBOT_TO_BUCKET / Math.sqrt(2), 45});
+        drivePositionsNetRed.put("Sample Score Pose", new double[]{-57 + ROBOT_TO_BUCKET / Math.sqrt(2), -57 + ROBOT_TO_BUCKET / Math.sqrt(2), 45});
         drivePositionsNetBlue.put("Sample Score Pose", new double[]{68 - ROBOT_TO_BUCKET / Math.sqrt(2), 68 - ROBOT_TO_BUCKET / Math.sqrt(2), -135});
 
-        drivePositionsNetRed.put("Ascent Park Waypoint", new double[]{-39, -30, 90});
-        drivePositionsNetBlue.put("Ascent Park Waypoint", new double[]{39, 30, -90});
+        drivePositionsNetRed.put("Ascent Park Waypoint 1", new double[]{-39, -36, 90});
+        drivePositionsNetBlue.put("Ascent Park Waypoint 1", new double[]{39, 36, -90});
 
-        drivePositionsNetRed.put("Ascent Park", new double[]{-24, -12, 90});
-        drivePositionsNetBlue.put("Ascent Park", new double[]{24, 12, -90});
+        drivePositionsNetRed.put("Ascent Park Waypoint 2", new double[]{-36, -12, 90});
+        drivePositionsNetBlue.put("Ascent Park Waypoint 2", new double[]{36, 12, -90});
+
+        drivePositionsNetRed.put("Ascent Park", new double[]{-23.5, -9, 90});
+        drivePositionsNetBlue.put("Ascent Park", new double[]{23.5, 9, -90});
 
         drivePositionsObsRed.put("Obs Park", new double[]{48, -63, 90});
         drivePositionsObsBlue.put("Obs Park", new double[]{-48, 63, -90});
@@ -105,8 +108,8 @@ public class AutoExample extends OpMode {
         } else {
             recentRed = false;
         }
-        telemetry.addData("Team : ", "%s", isRed ? "RED" : "BLUE");
-        telemetry.addData("Position : ", "%s", isNet ? "NET" : "OBSERVATION");
+        telemetry.addData("(LEFT) Team : ", "%s", isRed ? "RED" : "BLUE");
+        telemetry.addData("(UP) Position : ", "%s", isNet ? "NET" : "OBSERVATION");
         telemetry.update();
     }
 
@@ -197,11 +200,16 @@ public class AutoExample extends OpMode {
 
     public void actionSampleScore() {
         wait = getRuntime() + 1;
-        nextState = "actionAscentParkWay";
+        nextState = "actionAscentParkWay1";
     }
 
-    public void actionAscentParkWay() {
-        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint"), 1, false);
+    public void actionAscentParkWay1() {
+        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint 1"), 1, false);
+        nextState = "actionAscentParkWay2";
+    }
+
+    public void actionAscentParkWay2() {
+        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint 2"), 1, false);
         nextState = "actionAscentPark";
     }
 
