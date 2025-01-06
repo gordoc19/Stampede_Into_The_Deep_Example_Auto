@@ -4,10 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.utility_code.Robot;
 
-@TeleOp(name = "TeleOp", group = "tele-op")
-public class MechasTeleOp extends OpMode {
+@TeleOp(name = "Calibrate TeleOp", group = "tele-op")
+public class CalibrationTeleOp extends OpMode {
     Robot robot;
     double x1, y1, x2;
+    double liftSpeed;
     public void initRobot() {
         robot = new Robot();
     }
@@ -54,8 +55,8 @@ public class MechasTeleOp extends OpMode {
         y1 *= .5;
         x2 *= .5;
 
-
         robot.drive(y1, x1, x2, telemetry);
+
         //was just robot.drive(y1, x1, x2, telemetry); before
 
         telemetry.update();
