@@ -26,10 +26,10 @@ import java.util.HashMap;
  */
 public class Robot {
     /* Public OpMode members. */
-    public DcMotorEx DriveFrontLeft = null;
-    public DcMotorEx DriveFrontRight = null;
-    public DcMotorEx DriveRearLeft = null;
-    public DcMotorEx DriveRearRight = null;
+    public DcMotorEx DriveFrontLeft = null; //FL
+    public DcMotorEx DriveFrontRight = null; //FR
+    public DcMotorEx DriveRearLeft = null; //RL
+    public DcMotorEx DriveRearRight = null; //RR
     /**
      * FORWARD_ENCODER_COUNTS_PER_INCH, RIGHT_ENCODER_COUNTS_PER_INCH, CW_ENCODER_COUNTS_PER_DEGREE are used when using wheel encoders (not odometry pods)
      * <p>
@@ -37,69 +37,12 @@ public class Robot {
      * We divide by the distance traveled to get the average encoder count per unit per wheel.
      * You might get negative encoder values but use the absolute value in the equation.
      */
-    public static double FORWARD_ENCODER_COUNTS_PER_INCH = ((4253 + 4245 + 4251 + 4245 + 4265 + 4271 + 4279 + 4271 + 4291 + 4285 + 4296 + 4301) / 12.0) / 120.0;
+    public static double FORWARD_ENCODER_COUNTS_PER_INCH /*= ((test1FL + test1FR + test1RL + test1RR + test2FL + test2FR + test2RL + test2RR + test3FL + test3FR + test3RL + test3RR) / 12.0) / 120.0*/;
     //All values are positive when we strafe right.
-    public static double RIGHT_ENCODER_COUNTS_PER_INCH = ((4872 + 4872 + 4890 + 4922 + 4943 + 4932 + 4956 + 4951 + 4850 + 4857 + 4818 + 4831) / 12.0) / 120.0;
+    public static double RIGHT_ENCODER_COUNTS_PER_INCH /*= ((test1FL + test1FR + test1RL + test1RR + test2FL + test2FR + test2RL + test2RR + test3FL + test3FR + test3RL + test3RR) / 12.0) / 120.0*/;
     //We rotated 10 times twice. Rear wheels were negative when rotation was clockwise.
-    public static double CW_ENCODER_COUNTS_PER_DEGREE = ((30373 + 30397 + 30461 + 30448 + 30558 + 30576 + 30568 + 30581) / 8.0) / 10.0 / 360;
-    /**
-     * Total left odometry pod encoder count when traveling a decided forward distance (IF its negative, keep the negative sign)
-     */
-    static double LEFT_ENCODER_FORWARD_VALUE = -47837 + -47978 + -47925 + -47989;
-    /**
-     * Total right odometry pod encoder count when traveling a decided forward distance (IF its negative, keep the negative sign)
-     */
-    static double RIGHT_ENCODER_FORWARD_VALUE = 48145 + 48163 + 48117 + 48070;
-    /**
-     * Total middle odometry pod encoder count when traveling a decided forward distance (IF its negative, keep the negative sign)
-     */
-    static double MIDDLE_ENCODER_FORWARD_VALUE = -602 + -304 + -275 + -282;
-    /**
-     * Decided distance from encoder forward value tests (we drove forward 96in) times number of tests (in inches)
-     */
-    static double FORWARD_TRAVEL = 96 * 4;
+    public static double CW_ENCODER_COUNTS_PER_DEGREE /*= ((test1FL + test1FR + test1RL + test1RR + test2FL + test2FR + test2RL + test2RR + test3FL + test3FR + test3RL + test3RR) / 12.0) / 10.0 / 360*/;
 
-    //vals are whatever, left, right, middle
-    /**
-     * Total left odometry pod encoder count when traveling a decided strafe distance (IF its negative, keep the negative sign)
-     */
-    static double LEFT_ENCODER_STRAFE_VALUE = 326 + 148 + 193 + 438;
-    /**
-     * Total right odometry pod encoder count when traveling a decided strafe distance (IF its negative, keep the negative sign)
-     */
-    static double RIGHT_ENCODER_STRAFE_VALUE = 102 + -173 + -67 + 62;
-    /**
-     * Total middle odometry pod encoder count when traveling a decided strafe distance (IF its negative, keep the negative sign)
-     */
-    static double MIDDLE_ENCODER_STRAFE_VALUE = -48175 + -48011 + -48200 + -48155;
-    /**
-     * Decided distance from encoder strafe value tests (we strafed right 96in) times number of tests (in inches)
-     */
-    static double STRAFE_TRAVEL = 96 * 4;
-    /**
-     * Total left odometry pod encoder count when spinning a decided amount (IF its negative, keep the negative sign)
-     */
-    static double LEFT_ENCODER_CW_TURN = -69604 + -67945 + -67228 + -66051;
-    /**
-     * Total right odometry pod encoder count when spinning a decided amount (IF its negative, keep the negative sign)
-     */
-    static double RIGHT_ENCODER_CW_TURN = -130500 + -132140 + -132853 + -133990;
-    /**
-     * Total middle odometry pod encoder count when spinning a decided amount (IF its negative, keep the negative sign)
-     */
-    static double MIDDLE_ENCODER_CW_TURN = 194724 + 194350 + 195156 + 195039;
-    /**
-     * Decided amount from encoder spinning value tests [we spun clockwise (CW) ten times (3600 degrees)] times number of tests (in inches)
-     */
-    static double CW_TURN_DEGREES = 3600 + 3600 + 3600 + 3600;
-    static Array2DRowRealMatrix odomat = new Array2DRowRealMatrix(new double[][]{
-            {LEFT_ENCODER_FORWARD_VALUE, MIDDLE_ENCODER_FORWARD_VALUE, RIGHT_ENCODER_FORWARD_VALUE},
-            {LEFT_ENCODER_STRAFE_VALUE, MIDDLE_ENCODER_STRAFE_VALUE, RIGHT_ENCODER_STRAFE_VALUE},
-            {LEFT_ENCODER_CW_TURN, MIDDLE_ENCODER_CW_TURN, RIGHT_ENCODER_CW_TURN}
-    });
-    public static double[] FORWARD_PARAMS = new LUDecomposition(odomat).getSolver().solve(new ArrayRealVector(new double[]{FORWARD_TRAVEL, 0, 0})).toArray();
-    public static double[] STRAFE_PARAMS = new LUDecomposition(odomat).getSolver().solve(new ArrayRealVector(new double[]{0, STRAFE_TRAVEL, 0})).toArray();
-    public static double[] CW_TURN_PARAMS = new LUDecomposition(odomat).getSolver().solve(new ArrayRealVector(new double[]{0, 0, CW_TURN_DEGREES})).toArray();
     public AngleTrackerIMU angleTracker;
 
     int flLastPosition = 0;
@@ -148,10 +91,10 @@ public class Robot {
 
     public void initWheelHardware() {
         //was 12,10,0,0
-        DriveFrontLeft = setUpEncoderMotor("fl", DcMotor.Direction.FORWARD, 12, 10, 0.0, 5.0, false);
-        DriveFrontRight = setUpEncoderMotor("fr", DcMotor.Direction.REVERSE, 12, 10, 0.0, 5.0, false);
-        DriveRearLeft = setUpEncoderMotor("rl", DcMotor.Direction.FORWARD, 12, 10, 0.0, 5.0, false);
-        DriveRearRight = setUpEncoderMotor("rr", DcMotor.Direction.REVERSE, 12, 10, 0.0, 5.0, false);
+        DriveFrontLeft = setUpEncoderMotor("fl", DcMotor.Direction.FORWARD, 12, 10, 0.0, 5.0, true);
+        DriveFrontRight = setUpEncoderMotor("fr", DcMotor.Direction.REVERSE, 12, 10, 0.0, 5.0, true);
+        DriveRearLeft = setUpEncoderMotor("rl", DcMotor.Direction.FORWARD, 12, 10, 0.0, 5.0, true);
+        DriveRearRight = setUpEncoderMotor("rr", DcMotor.Direction.REVERSE, 12, 10, 0.0, 5.0, true);
     }
 
     /**
@@ -254,20 +197,13 @@ public class Robot {
         int rlPositionChange = rlPosition - rlLastPosition;
         int rrPositionChange = rrPosition - rrLastPosition;
 
-        int rightPod = rlPositionChange;
-        int leftPod = rrPositionChange;
-        int midPod = frPositionChange;
-
         //how far has robot moved, how many inches and degrees changed (forward, strafe, turn)
         //turn angle in degrees
-        //double cwTurnAngle = ((flPositionChange + frPositionChange - rlPositionChange - rrPositionChange) / 4.0) / CW_ENCODER_COUNTS_PER_DEGREE;
+        double cwTurnAngle = ((flPositionChange + frPositionChange - rlPositionChange - rrPositionChange) / 4.0) / CW_ENCODER_COUNTS_PER_DEGREE;
         //inches traveled forward
-        //double forwardDistance = ((flPositionChange - frPositionChange - rlPositionChange + rrPositionChange) / 4.0) / FORWARD_ENCODER_COUNTS_PER_INCH;
+        double forwardDistance = ((flPositionChange - frPositionChange - rlPositionChange + rrPositionChange) / 4.0) / FORWARD_ENCODER_COUNTS_PER_INCH;
         //inches traveled right
-        //double rightDistance = ((flPositionChange + frPositionChange + rlPositionChange + rrPositionChange) / 4.0) / RIGHT_ENCODER_COUNTS_PER_INCH;
-        double forwardDistance = FORWARD_PARAMS[0] * leftPod + FORWARD_PARAMS[1] * midPod + FORWARD_PARAMS[2] * rightPod;
-        double rightDistance = STRAFE_PARAMS[0] * leftPod + STRAFE_PARAMS[1] * midPod + STRAFE_PARAMS[2] * rightPod;
-        double cwTurnAngle = CW_TURN_PARAMS[0] * leftPod + CW_TURN_PARAMS[1] * midPod + CW_TURN_PARAMS[2] * rightPod;
+        double rightDistance = ((flPositionChange + frPositionChange + rlPositionChange + rrPositionChange) / 4.0) / RIGHT_ENCODER_COUNTS_PER_INCH;
 
         //updating new last position
         flLastPosition = flPosition;

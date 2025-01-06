@@ -58,36 +58,6 @@ public class AutoExample extends OpMode {
 
         drivePositionsObsRed.put("Obs Park", new double[]{48, -63, 90});
         drivePositionsObsBlue.put("Obs Park", new double[]{-48, 63, -90});
-
-        /*double ROBOT_TO_PIXEL_CENTER = 8.5;
-        drivePositionsNetRed.put("propLEFT", new double[]{-47.5 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 135});
-        drivePositionsNetRed.put("propMIDDLE", new double[]{-36, -24.5 - ROBOT_TO_PIXEL_CENTER, 90});
-        drivePositionsNetRed.put("propRIGHT", new double[]{-24.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 45});
-
-        drivePositionsObsRed.put("propLEFT", new double[]{0.5 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 135});
-        drivePositionsObsRed.put("propMIDDLE", new double[]{12, -24.5 - ROBOT_TO_PIXEL_CENTER, 90});
-        drivePositionsObsRed.put("propRIGHT", new double[]{23.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -30 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 45});
-
-        drivePositionsNetBlue.put("propLEFT", new double[]{-24.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -45});
-        drivePositionsNetBlue.put("propMIDDLE", new double[]{-36, 24.5 + ROBOT_TO_PIXEL_CENTER, -90});
-        drivePositionsNetBlue.put("propRIGHT", new double[]{-49 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -135});
-
-        drivePositionsObsBlue.put("propLEFT", new double[]{23.5 - ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -45});
-        drivePositionsObsBlue.put("propMIDDLE", new double[]{12, 24.5 + ROBOT_TO_PIXEL_CENTER, -90});
-        drivePositionsObsBlue.put("propRIGHT", new double[]{-1 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), 30 + ROBOT_TO_PIXEL_CENTER / Math.sqrt(2), -135});
-
-        drivePositionsNetRed.put("propApproachLEFT", new double[]{-38, -40, 135});
-        drivePositionsNetRed.put("propApproachMIDDLE", new double[]{-36, -40, 90});
-        drivePositionsNetRed.put("propApproachRIGHT", new double[]{-36, -40, 45});
-        drivePositionsObsRed.put("propApproachLEFT", new double[]{12, -40, 135});
-        drivePositionsObsRed.put("propApproachMIDDLE", new double[]{12, -40, 90});
-        drivePositionsObsRed.put("propApproachRIGHT", new double[]{14, -40, 45});
-        drivePositionsNetBlue.put("propApproachLEFT", new double[]{-36, 40, -45});
-        drivePositionsNetBlue.put("propApproachMIDDLE", new double[]{-36, 40, -90});
-        drivePositionsNetBlue.put("propApproachRIGHT", new double[]{-38, 40, -135});
-        drivePositionsObsBlue.put("propApproachLEFT", new double[]{14, 40, -45});
-        drivePositionsObsBlue.put("propApproachMIDDLE", new double[]{12, 40, -90});
-        drivePositionsObsBlue.put("propApproachRIGHT", new double[]{12, 40, -135});*/
     }
 
     @Override
@@ -194,7 +164,7 @@ public class AutoExample extends OpMode {
     }
 
     public void actionStart() {
-        driveTo.setTargetPosition(drivePositions.get(isNet ? "Sample Score Pose" : "Obs Park"), 1, true);
+        driveTo.setTargetPosition(drivePositions.get(isNet ? "Sample Score Pose" : "Obs Park"), .5, true);
         nextState = isNet ? "actionSampleScore" : "actionStop";
     }
 
@@ -204,17 +174,17 @@ public class AutoExample extends OpMode {
     }
 
     public void actionAscentParkWay1() {
-        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint 1"), 1, false);
+        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint 1"), .5, false);
         nextState = "actionAscentParkWay2";
     }
 
     public void actionAscentParkWay2() {
-        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint 2"), 1, false);
+        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint 2"), .5, false);
         nextState = "actionAscentPark";
     }
 
     public void actionAscentPark() {
-        driveTo.setTargetPosition(drivePositions.get("Ascent Park"), 1, false);
+        driveTo.setTargetPosition(drivePositions.get("Ascent Park"), .5, false);
         nextState = "actionStop";
     }
 
