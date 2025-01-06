@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.utility_code.Robot;
 
-@TeleOp(name = "TeleOp", group = "tele-op")
-public class MechasTeleOp extends OpMode {
+@TeleOp(name = "Calibration TeleOp", group = "tele-op")
+public class CalibrationTeleOp extends OpMode {
     Robot robot;
     double x1, y1, x2;
     public void initRobot() {
