@@ -33,10 +33,11 @@ public class Robot {
     /**
      * FORWARD_ENCODER_COUNTS_PER_INCH, RIGHT_ENCODER_COUNTS_PER_INCH, CW_ENCODER_COUNTS_PER_DEGREE are used when using wheel encoders (not odometry pods)
      * <p>
-     * We drove 120 inches or 3600 degrees 3 times. These were the wheel encoder counts for each of the wheels (keep them all positive).
+     * We drove 96 inches or 3600 degrees 3 times. These were the wheel encoder counts for each of the wheels (keep them all positive).
      * We divide by the distance traveled to get the average encoder count per unit per wheel.
      * You might get negative encoder values but use the absolute value in the equation.
      */
+    //telemetry prints FL, FR, RL, RR
     public static double FORWARD_ENCODER_COUNTS_PER_INCH /*= ((test1FL + test1FR + test1RL + test1RR + test2FL + test2FR + test2RL + test2RR + test3FL + test3FR + test3RL + test3RR) / 12.0) / 120.0*/;
     //All values are positive when we strafe right.
     public static double RIGHT_ENCODER_COUNTS_PER_INCH /*= ((test1FL + test1FR + test1RL + test1RR + test2FL + test2FR + test2RL + test2RR + test3FL + test3FR + test3RL + test3RR) / 12.0) / 120.0*/;
