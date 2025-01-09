@@ -36,17 +36,24 @@ public class Robot {
     public Servo basket = null;
 
     /**
+     * FORWARD_ENCODER_COUNTS_PER_INCH, RIGHT_ENCODER_COUNTS_PER_INCH, CW_ENCODER_COUNTS_PER_DEGREE are used when using wheel encoders (not odometry pods)
+     * <p>
+     * We drove 120 inches or 3600 degrees 3 times. These were the wheel encoder counts for each of the wheels (keep them all positive).
+     * We divide by the distance traveled to get the average encoder count per unit per wheel.
+     * You might get negative encoder values but use the absolute value in the equation.
+     */
+    /**
      * Total left odometry pod encoder count when traveling a decided forward distance (IF its negative, keep the negative sign)
      */
-    static double LEFT_ENCODER_FORWARD_VALUE /*= run1 + run2 + run3 + run4*/;
+    static double LEFT_ENCODER_FORWARD_VALUE = -47837 + -47978 + -47925 + -47989;
     /**
      * Total right odometry pod encoder count when traveling a decided forward distance (IF its negative, keep the negative sign)
      */
-    static double RIGHT_ENCODER_FORWARD_VALUE /*= run1 + run2 + run3 + run4*/;
+    static double RIGHT_ENCODER_FORWARD_VALUE = 48145 + 48163 + 48117 + 48070;
     /**
      * Total middle odometry pod encoder count when traveling a decided forward distance (IF its negative, keep the negative sign)
      */
-    static double MIDDLE_ENCODER_FORWARD_VALUE /*= run1 + run2 + run3 + run4*/;
+    static double MIDDLE_ENCODER_FORWARD_VALUE = -602 + -304 + -275 + -282;
     /**
      * Decided distance from encoder forward value tests (we drove forward 96in) times number of tests (in inches)
      */
@@ -56,15 +63,15 @@ public class Robot {
     /**
      * Total left odometry pod encoder count when traveling a decided strafe distance (IF its negative, keep the negative sign)
      */
-    static double LEFT_ENCODER_STRAFE_VALUE /*= run1 + run2 + run3 + run4*/;
+    static double LEFT_ENCODER_STRAFE_VALUE = 326 + 148 + 193 + 438;
     /**
      * Total right odometry pod encoder count when traveling a decided strafe distance (IF its negative, keep the negative sign)
      */
-    static double RIGHT_ENCODER_STRAFE_VALUE /*= run1 + run2 + run3 + run4*/;
+    static double RIGHT_ENCODER_STRAFE_VALUE = 102 + -173 + -67 + 62;
     /**
      * Total middle odometry pod encoder count when traveling a decided strafe distance (IF its negative, keep the negative sign)
      */
-    static double MIDDLE_ENCODER_STRAFE_VALUE /*= run1 + run2 + run3 + run4*/;
+    static double MIDDLE_ENCODER_STRAFE_VALUE = -48175 + -48011 + -48200 + -48155;
     /**
      * Decided distance from encoder strafe value tests (we strafed right 96in) times number of tests (in inches)
      */
@@ -72,19 +79,19 @@ public class Robot {
     /**
      * Total left odometry pod encoder count when spinning a decided amount (IF its negative, keep the negative sign)
      */
-    static double LEFT_ENCODER_CW_TURN /*= run1 + run2 + run3 + run4*/;
+    static double LEFT_ENCODER_CW_TURN = -69604 + -67945 + -67228 + -66051;
     /**
      * Total right odometry pod encoder count when spinning a decided amount (IF its negative, keep the negative sign)
      */
-    static double RIGHT_ENCODER_CW_TURN /*= run1 + run2 + run3 + run4*/;
+    static double RIGHT_ENCODER_CW_TURN = -130500 + -132140 + -132853 + -133990;
     /**
      * Total middle odometry pod encoder count when spinning a decided amount (IF its negative, keep the negative sign)
      */
-    static double MIDDLE_ENCODER_CW_TURN /*= run1 + run2 + run3 + run4*/;
+    static double MIDDLE_ENCODER_CW_TURN = 194724 + 194350 + 195156 + 195039;
     /**
      * Decided amount from encoder spinning value tests [we spun clockwise (CW) ten times (3600 degrees)] times number of tests (in inches)
      */
-    static double CW_TURN_DEGREES = 3600 * 4;
+    static double CW_TURN_DEGREES = 3600 + 3600 + 3600 + 3600;
     static Array2DRowRealMatrix odomat = new Array2DRowRealMatrix(new double[][]{
             {LEFT_ENCODER_FORWARD_VALUE, MIDDLE_ENCODER_FORWARD_VALUE, RIGHT_ENCODER_FORWARD_VALUE},
             {LEFT_ENCODER_STRAFE_VALUE, MIDDLE_ENCODER_STRAFE_VALUE, RIGHT_ENCODER_STRAFE_VALUE},
