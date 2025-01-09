@@ -164,7 +164,7 @@ public class AutoExample extends OpMode {
     }
 
     public void actionStart() {
-        driveTo.setTargetPosition(drivePositions.get(isNet ? "Sample Score Pose" : "Obs Park"), 1, true);
+        driveTo.setTargetPosition(drivePositions.get(isNet ? "Sample Score Pose" : "Obs Park"), .5, true);
         nextState = isNet ? "actionSampleScore" : "actionStop";
     }
 
@@ -174,17 +174,17 @@ public class AutoExample extends OpMode {
     }
 
     public void actionAscentParkWay1() {
-        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint 1"), 1, false);
+        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint 1"), .5, false);
         nextState = "actionAscentParkWay2";
     }
 
     public void actionAscentParkWay2() {
-        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint 2"), 1, false);
+        driveTo.setTargetPosition(drivePositions.get("Ascent Park Waypoint 2"), .5, false);
         nextState = "actionAscentPark";
     }
 
     public void actionAscentPark() {
-        driveTo.setTargetPosition(drivePositions.get("Ascent Park"), 1, false);
+        driveTo.setTargetPosition(drivePositions.get("Ascent Park"), .5, false);
         nextState = "actionStop";
     }
 
