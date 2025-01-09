@@ -37,6 +37,7 @@ public class Robot {
      * We divide by the distance traveled to get the average encoder count per unit per wheel.
      * You might get negative encoder values but use the absolute value in the equation.
      */
+
     //telemetry prints FL, FR, RL, RR
     public static double FORWARD_ENCODER_COUNTS_PER_INCH /*= ((test1FL + test1FR + test1RL + test1RR + test2FL + test2FR + test2RL + test2RR + test3FL + test3FR + test3RL + test3RR) / 12.0) / 120.0*/;
     //All values are positive when we strafe right.
