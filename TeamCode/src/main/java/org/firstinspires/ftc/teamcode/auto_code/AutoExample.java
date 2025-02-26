@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto_code;
+import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -31,12 +32,17 @@ public class AutoExample extends OpMode {
     HashMap<String, double[]> drivePositionsObsBlue = new HashMap<>();
     HashMap<String, double[]> drivePositions;
 
+    double maxAprilError = 6;
+    double maxAprilAngleError = 5;
+
     @Override
     public void init() {
         robot = new Robot();
         robot.init(hardwareMap, true);
 
         driveTo = new DriveTo(robot, telemetry);
+
+        robot.limelight.start(); // This tells Limelight to start looking!
 
         //x, y, heading for start positions
         drivePositionsNetRed.put("start", new double[]{-36, -63, 90});
@@ -107,12 +113,23 @@ public class AutoExample extends OpMode {
 
     @Override
     public void loop() {
-
         double[] positionChange = robot.positionChange();
         robot.updateFieldPosition(positionChange[0], positionChange[1], positionChange[2]);
         telemetry.addData("Field Position (Coordinates)", "%.2f, %.2f, %.2f", robot.xFieldPos, robot.yFieldPos, robot.headingField);
         telemetry.addData("IMU Orientation", "IMU %.2f", robot.angleTracker.getOrientation());
         telemetry.addData("Next action", nextState);
+
+        LLResult result = robot.limelight.getLatestResult();
+
+        if(result != null &&
+                result.isValid() &&
+                Math.abs(result.getBotpose().getPosition().x - robot.xFieldPos) < maxAprilError &&
+                Math.abs(result.getBotpose().getPosition().y - robot.yFieldPos) < maxAprilError &&
+                Math.abs(robot.angleDifference(robot.headingField, result.getBotpose().getOrientation().getYaw())) < maxAprilAngleError
+        ) {
+            robot.xFieldPos = result.getBotpose().getPosition().x;
+            robot.yFieldPos = result.getBotpose().getPosition().y;
+        }
 
         driveTo.sendTelemetry(telemetry);
         driveTo.updateDrive();

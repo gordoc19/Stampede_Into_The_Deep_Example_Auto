@@ -18,6 +18,12 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.LLStatus;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+
 import java.util.HashMap;
 
 
@@ -34,6 +40,7 @@ public class Robot {
     public DcMotorEx DriveRearRight = null;
     public DcMotorEx lift = null;
     public Servo basket = null;
+    public Limelight3A limelight;
 
     /**
      * FORWARD_ENCODER_COUNTS_PER_INCH, RIGHT_ENCODER_COUNTS_PER_INCH, CW_ENCODER_COUNTS_PER_DEGREE are used when using wheel encoders (not odometry pods)
@@ -169,6 +176,8 @@ public class Robot {
     public void initOtherHardware() {
         lift = setUpEncoderMotor("lift", DcMotor.Direction.REVERSE, 12, 10, 0.0, 5.0, true);
         basket = hwMap.get(Servo.class, "basket");
+        limelight = hwMap.get(Limelight3A.class, "limelight");
+        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
     }
 
     /**
